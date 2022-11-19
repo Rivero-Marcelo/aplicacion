@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  
+  app:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html/
+    networks:
+      - app 
+    depends_on:
+      - "mysql"
+      
+  mysql:
+    image: mysql:8.0.31
+    restart: unless-stopped 
+    tty: true 
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=laravel
+    networks:
+      - app
+    
+networks:
+  app:
+    driver: bridge
+
+  
